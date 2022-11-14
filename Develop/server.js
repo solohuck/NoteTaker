@@ -1,33 +1,25 @@
 const express = require('express'); 
 
+// initialize express 
 const app = express();
-const PORT = 3001;
-const path = require('path');
-const termData = require('./db/db.json')
 
-// 
+// variable port
+const PORT = process.env.PORT || 3001;
 
+// create a route for every file in the public directory 
 app.use(express.static('public'));
 
-// HTML routes 
+// sets up express to deal with data parser 
+app.use(express.json());
 
-app.get( '/notes', (req, res) => 
-    res.sendFile(path.join(__dirname, '/public/notes.html'))
+app.use(express.urlencoded({ extended: true }));
+
+// routes 
+
+require('./public/routes/api')
+require('./public/routes/html')
+
+// Starts the server
+app.listen(PORT, () => 
+    console.log(`App listening at http://localhost:${PORT}🚀`)
 );
-
-app.get('*', (req, res) => 
-    res.sendFile(path.join(__dirname, '/public/index.html'))
-);
-
-// API routes 
-
-app.get('/api/notes', (req, res) => res.json(termData));
-
-// POST request to add a review 
-
-app.post('/api/notes', (req, res) => {
-
-// log that a POST request was recived 
-
-    consonle.log(`${req.method} request recived to add a review`);
-})
